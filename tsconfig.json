@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "moduleResolution": "Node",
+    "module": "esnext",
+    "strict": true,
+    "target": "esnext",
+    "sourceMap": false,
+    "baseUrl": "./src",
+    "plugins": []
+  },
+  "paths": {
+    "navigation/*": "navigation/*",
+    "screens/*": "screens/*",
+    "locales/*": "locales/*",
+    "assets/*": "assets/*",
+    "utils/*": "utils/*",
+    "constant/*": "constant/*",
+    "api/*": "api/*",
+    "components/*": "components/*",
+    "helpers/*": "helpers",
+    "store/*": "store/*",
+    "firebase/*": "firebase/*",
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "filesGlob": [
+    "typings/index.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.png",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "index.js",
+    "build",
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "react-native.config.js",
+  ],
+  "compileOnSave": false
+}
