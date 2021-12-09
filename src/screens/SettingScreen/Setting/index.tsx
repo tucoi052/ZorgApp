@@ -9,11 +9,16 @@ import { ApplicationState } from 'store/configureAction';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { ActionCreators as AuthAction } from 'store/authenticate';
+import { ActionCreators as ContextAction } from 'store/context';
 import alertDefaultTitle from 'utils/AlertDefaultTitle';
+import { useNavigation } from '@react-navigation/core';
+import { RouteName } from 'constant';
 
 interface UIProps {
   navigation: any;
   Logout: Function;
+  GetQuestion: Function;
+  FieldChange: Function;
 }
 
 const dataItem = [
@@ -37,11 +42,19 @@ const dataItem = [
 ]
 const SettingLayout = (props: UIProps) => {
   const colors = useColor();
+  const navigation = useNavigation();
 
   const onPressItem = (index) => {
-    console.log(index);
-    
-    if(index == 3) {
+    if (index == 0)
+      navigation.navigate(RouteName.PROFILE);
+    if (index == 1){
+      props.FieldChange('listQuestion', []);
+      props.GetQuestion(10,0);
+      navigation.navigate(RouteName.QUESTION);
+    }
+    if (index == 2)
+      navigation.navigate(RouteName.FEEDBACK);
+    if (index == 3) {
       alertDefaultTitle.show('Bạn muốn đăng xuất ?', 'OK', () => {
         props.Logout();
       }, 'Hủy')
@@ -53,7 +66,9 @@ const SettingLayout = (props: UIProps) => {
       margin={10} paddingBottom={20} shadow onPress={() => onPressItem(index)}>
       <Layout marginTop={20} centered middle padding={20} borderRadius={50} color={colors?.PRIMARY_COLOR}>
         <Image
-          source={item.assert} />
+          source={item.assert}
+          style={{ width: 40, height: 40 }}
+        />
       </Layout>
       <Label bold marginTop={10} centered>{item.title}</Label>
     </Button>
@@ -81,6 +96,8 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 const mapDispatchToProps = {
   Logout: AuthAction.Logout,
+  GetQuestion: ContextAction.GetQuestion,
+  FieldChange: ContextAction.FieldChange
 };
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

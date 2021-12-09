@@ -1,11 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
-    TouchableWithoutFeedback,
-    Keyboard,
-    KeyboardAvoidingView,
-    ImageBackground,
-    Platform,
-    ScrollView,
+    Text,
     Image,
     View,
 } from 'react-native';
@@ -14,7 +9,7 @@ import { compose } from 'redux';
 import { ActionCreators as ContextAction } from 'store/context';
 import { ActionCreators as AuthAction } from 'store/authenticate';
 import { ApplicationState } from 'store/configureAction';
-import { TextInputUI, Layout, Label, Button, ExpandAnimation } from 'components';
+import { TextInputUI, Layout, Label, Button } from 'components';
 import { useFormik } from 'formik';
 import { FormStage, Row, Stage } from 'models/form';
 import { LoginUser } from 'models/auth';
@@ -24,17 +19,16 @@ import { useColor } from 'hooks';
 import { useNavigation } from '@react-navigation/core'; 1
 import { RouteName } from 'constant';
 import Animated, { measure, runOnUI, Transition, Transitioning, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { Doctor } from 'models/doctor';
 
 interface State {
-    refItem: any,
-    transition: any
+    item: Doctor
 }
 type UIProps = State;
 
 const ItemDoctorLayout = (props: UIProps) => {
     const color = useColor();
     const navigation = useNavigation();
-
     const aref = useAnimatedRef<View>();
     const open = useSharedValue(false);
     const progress = useDerivedValue(() =>
@@ -53,7 +47,7 @@ const ItemDoctorLayout = (props: UIProps) => {
                 if (height.value === 0) {
                     runOnUI(() => {
                         "worklet";
-                        height.value = measure(aref).height + 120;
+                        height.value = measure(aref).height * 3 + 20;
                     })();
                 }
                 open.value = !open.value;
@@ -62,10 +56,10 @@ const ItemDoctorLayout = (props: UIProps) => {
                 <Image
                     style={{ width: 100, height: 100, borderRadius: 30 }}
                     source={ImageAssets.logo} />
-                <Layout style={{ width: '75%' }}>
-                    <Label bold>Dr Nguyễn Văn A</Label>
-                    <Label marginVertical={5}>Bác sĩ nội khoa</Label>
-                    <Label numberOfLines={2}>Bệnh viện Giao thông vận tải Trung Ương 23</Label>
+                <Layout style={{ width: '70%' }}>
+                    <Label bold>{props.item?.fullName}</Label>
+                    <Label marginVertical={5}>{props.item?.hospital}</Label>
+                    {/* <Label numberOfLines={2}>Bệnh viện Giao thông vận tải Trung Ương 23</Label> */}
                 </Layout>
             </Layout>
             <Animated.View style={[{
@@ -73,20 +67,13 @@ const ItemDoctorLayout = (props: UIProps) => {
             }, style]}>
                 <View
                     ref={aref}
-                    onLayout={({
-                        nativeEvent: {
-                            layout: { height: h },
-                        },
-                    }) => console.log({ h })}
                 >
-                    <Layout marginBottom={20}>
-                        <Label bold marginBottom={10}>Thông tin bác sĩ:</Label>
-                        <Label marginBottom={10}>Bác sĩ điều trị tại Bệnh viện Giao thông Vận tải Trung ương
-Gần 5 năm kinh nghiệm chữa điều trị các bệnh Nội tổng quát - Hồi sức cấp cứu</Label>
-                        <Button borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle marginHorizontal={_screen_height * 0.12}>
-                            <Label color='#fff'>Chọn</Label>
-                        </Button>
-                    </Layout>
+                    <Label bold marginBottom={10}>Thông tin bác sĩ:</Label>
+                    <Label marginBottom={10}>{props.item.description}</Label>
+                    <Label  style={{alignSelf: 'flex-end'}} marginBottom={10}>Lượt lựa chọn: {props.item.quantityChoose}</Label>
+                    <Button marginTop={10} borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle marginHorizontal={_screen_height * 0.12}>
+                        <Label color='#fff'>Chọn</Label>
+                    </Button>
                 </View>
             </Animated.View>
         </Button>

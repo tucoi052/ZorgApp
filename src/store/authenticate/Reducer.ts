@@ -9,6 +9,7 @@ import { clearToken, client, setRefreshToken, setToken } from "api/client";
 import { Endpoint } from "api/endpoint";
 import Toast from "react-native-toast-message";
 import { showToast } from "components";
+import { showLoading } from "components/loading/LoadingModal";
 
 interface LoadedAction {
   type: string;
@@ -44,7 +45,7 @@ export const ActionCreators = {
           'email': email,
           'password': password
         }
-        const rsp = await client.post(Endpoint.LOGIN, body);
+        const rsp = await client.post(Endpoint.LOGIN, body, true);
         if (rsp && rsp.status == 201) {
           console.log(rsp.data);
 
@@ -73,29 +74,24 @@ export const ActionCreators = {
         showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
       }
     },
-    Register: (register: Register): ThunkAction<KnownAction> =>
+  Register: (register: Register): ThunkAction<KnownAction> =>
     async (dispatch, getState) => {
       try {
-          console.log(register);
-          
-        // let body = {
-        //   'email': email,
-        //   'password': password
-        // }
-        // const rsp = await client.post(Endpoint.LOGIN, body);
-        // if (rsp && rsp.status == 201) {
-        //   console.log(rsp.data);
+        delete register.repeatPassword;
+        const rsp = await client.post(Endpoint.REGISTER, register, true);
+        if (rsp && rsp.status == 201) {
+          console.log(rsp.data);
 
-        //   await setToken(rsp.data.accessToken);
-        //   await setRefreshToken(rsp.data.accessToken);
-        //   dispatch({
-        //     type: ActionType.FIELD_CHANGE,
-        //     fieldName: 'isLoggedIn',
-        //     fieldValue: true,
-        //   });
-        // }
+          await setToken(rsp.data.accessToken);
+          await setRefreshToken(rsp.data.accessToken);
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'isLoggedIn',
+            fieldValue: true,
+          });
+        }
       } catch (error) {
-        showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+        showToast('error', error.response.data.message === 'EmailExisted' ? 'Email đã tồn tại!' : 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
       }
     },
 };

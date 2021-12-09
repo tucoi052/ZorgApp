@@ -10,7 +10,7 @@ import { compose } from 'redux';
 import { ApplicationState } from 'store/configureAction';
 import { useNavigation } from '@react-navigation/core';
 import { RouteName } from 'constant';
-import { showLoading } from 'components/loading/LoadingModal';
+import { ActionCreators as ContextAction } from 'store/context';
 
 interface UIProps {
   navigation: any;
@@ -35,23 +35,27 @@ const dataItem = [
   }
 
 ]
-const HomeScreen = (props: UIProps) => {
+const HomeScreen = (props: UIProps & typeof ContextAction) => {
   const navigation = useNavigation();
   const colors = useColor();
 
-  useEffect(()=>{
-    showLoading();
-  },[])
+  useEffect(() => {
+    props.GetProfile();
+  }, [])
 
-  const Item = (item,index) => (
+  const Item = (item, index) => (
     <Button key={index} middle style={{ width: _screen_width / 2 - 40 }} borderRadius={10} color='#fff'
-    margin={10} paddingBottom={20} shadow onPress={() => {
-      navigation.navigate(RouteName.SELECT_DOCTOR);
-    }}>
+      margin={10} paddingBottom={20} shadow onPress={() => {
+        props.FieldChange('loadmore', { offset: 0, isEnd: false });
+        props.FieldChange('listDoctor', []);
+        props.GetDoctor(index, 10, 0);
+        navigation.navigate(RouteName.SELECT_DOCTOR, { id: index });
+      }}>
       <Layout marginTop={20} centered middle padding={20} borderRadius={50} color={colors?.PRIMARY_COLOR}>
-      <Image
-        source={item.assert} />
-        </Layout>
+        <Image
+          source={item.assert}
+          style={{ width: 40, height: 40 }} />
+      </Layout>
       <Label bold marginTop={10} centered>{item.title}</Label>
     </Button>
   )
@@ -65,9 +69,9 @@ const HomeScreen = (props: UIProps) => {
       </Layout>
       <Label centered bold size={sizes._19sdp}>Bạn cần hỗ trợ dịch vụ nào ?</Label>
       <Layout marginTop={35} centered flexGrow={1} style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
-        {dataItem.map((e,index) => Item(e,index))}
+        {dataItem.map((e, index) => Item(e, index))}
       </Layout>
-      
+
     </Layout>
   );
 };
@@ -77,6 +81,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   validationSchema: state.AuthenticateState.validationSchema,
 });
 const mapDispatchToProps = {
+  ...ContextAction,
 };
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

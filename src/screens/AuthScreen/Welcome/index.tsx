@@ -28,7 +28,7 @@ interface State {
     user: LoginUser;
     validationSchema: any;
 }
-type UIProps = State & typeof ContextAction & typeof AuthAction;
+type UIProps = State;
 
 const WelcomeLayout = (props: UIProps) => {
     const color = useColor();
@@ -38,9 +38,9 @@ const WelcomeLayout = (props: UIProps) => {
             <Image
                 style={{ marginTop: 20 }}
                 source={ImageAssets.logo} />
-            <Label size={sizes._21sdp} color='#47599B'>Love's foundation is care.</Label>
+            <Label marginTop={20} size={sizes._21sdp} color='#47599B'>Love's foundation is care.</Label>
 
-            <Button shadow marginTop={_screen_height * 0.35} borderRadius={10} padding={15} color={color?.BUTTON_COLOR}
+            <Button shadow marginTop={_screen_height * 0.25} borderRadius={10} padding={15} color={color?.BUTTON_COLOR}
                 onPress={() => {
                     // props.FieldChange('isLoggedIn', true)
                     navigation.navigate(RouteName.SIGN_IN)

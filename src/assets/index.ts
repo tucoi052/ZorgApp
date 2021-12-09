@@ -21,6 +21,7 @@ export const IconImage = {
     information: require('./images/information.png'),
     logout: require('./images/logout.png'),
     search: require('./images/search.png'),
+    arrowLeft: require('./images/arrowleft.png'),
 }
 
 export const ImageAssets = {

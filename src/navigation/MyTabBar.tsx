@@ -32,8 +32,8 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 			return <Layout middle >
 				<Image
 					style={{
-						width: sizes._18sdp,
-						height: sizes._18sdp,
+						width: sizes._20sdp,
+						height: sizes._20sdp,
 						tintColor: focused ? '#80EDE6' : 'grey',
 					}}
 					source={TabIcon.home}
@@ -44,8 +44,8 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 			return <Layout middle>
 				<Image
 					style={{
-						width: sizes._18sdp,
-						height: sizes._18sdp,
+						width: sizes._20sdp,
+						height: sizes._20sdp,
 						tintColor: focused ? '#80EDE6' : 'grey',
 					}}
 					source={TabIcon.schedule}
@@ -57,8 +57,8 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 			return <Layout middle>
 				<Image
 					style={{
-						width: sizes._18sdp,
-						height: sizes._18sdp,
+						width: sizes._20sdp,
+						height: sizes._20sdp,
 						tintColor: focused ? '#80EDE6' : 'grey',
 					}}
 					source={TabIcon.chat}
@@ -69,8 +69,8 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 			return <Layout middle>
 				<Image
 					style={{
-						width: sizes._19sdp,
-						height: sizes._19sdp,
+						width: sizes._22sdp,
+						height: sizes._22sdp,
 						resizeMode: 'contain',
 						tintColor: focused ? '#80EDE6' : 'grey',
 					}}
@@ -86,9 +86,8 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 			transition={transition} >
 			<View style={{
 				flexDirection: 'row', backgroundColor: "#fff",
-				height: 70, borderTopLeftRadius: 20,
-				borderTopRightRadius: 20, alignItems: "center",
-				marginBottom: 10
+				height: 70, alignItems: "center",
+				marginBottom: 10,
 			}}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
@@ -118,13 +117,14 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 					};
 					return (
 						<TouchableOpacity
+							key={'index' + index.toString()}
 							accessibilityRole="button"
 							// accessibilityStates={isFocused ? ['selected'] : []}
 							accessibilityLabel={options.tabBarAccessibilityLabel}
 							testID={options.tabBarTestID}
 							onPress={onPress}
 							onLongPress={onLongPress}
-							style={{ flex: 1, alignItems: "center" }}
+							style={{ flex: 1, padding: 10 }}
 						>
 							{Icon(label, isFocused)}
 						</TouchableOpacity>

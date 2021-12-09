@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Image, Text } from 'react-native';
+import { FlatList, Image, Text, View } from 'react-native';
 import { Layout, Label, Button, TextInputUI } from 'components';
 import styled from 'styled-components/native';
 import { useColor, useDebouncedEffect } from 'hooks';
@@ -7,71 +7,74 @@ import { IconImage, ImageAssets } from 'assets';
 import { sizes, _screen_height, _screen_width } from 'utils/sizes';
 import { isObject } from 'formik/dist/utils';
 import { ItemDoctorLayout } from 'screens/Shared';
-import Animated, { Transition, Transitioning } from 'react-native-reanimated';
-import { ScrollView } from 'react-native-gesture-handler';
+import Animated, { color, Transition, Transitioning } from 'react-native-reanimated';
+import { ApplicationState } from 'store/configureAction';
+import { ActionCreators as ContextAction } from 'store/context';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { Doctor } from 'models/doctor';
+import Spinner from 'react-native-spinkit';
 
 interface UIProps {
   navigation: any;
+  route: any;
+  listDoctor: Doctor[],
+  loadmore: any
 }
 
-const dataItem = [
-  {
-    title: 'Nội tổng quát',
-    assert: IconImage.doctor,
-  },
-  {
-    title: 'Tai, mũi, họng',
-    assert: IconImage.ent,
-  },
-  {
-    title: 'Nhi khoa',
-    assert: IconImage.baby,
-  },
-  {
-    title: 'Sức khỏe tâm thần & dinh dưỡng',
-    assert: IconImage.mental,
-  }
-
-]
-const SelectDoctorLayout = (props: UIProps) => {
+const SelectDoctorLayout = (props: UIProps & typeof ContextAction) => {
   const colors = useColor();
-  const [search, setSearch] = useState('');
-  const ref = useRef<any>();
+  const [search, setSearch] = useState<string>();
+  const [refreshing, setRefreshing] = useState(false);
+  const id = props.route?.params?.id ?? '';
+  const _keyExtractor = (item: any, index: number) => index.toString();
 
-  const transition = (
-    <Transition.Sequence>
-      <Transition.Out type="scale" />
-      <Transition.Change interpolation='easeInOut' />
-      <Transition.In type='scale' />
-    </Transition.Sequence>
-  );
 
   useDebouncedEffect(() => {
-    if (search.length == 0 || search.length > 3) {
-      console.log(search);
-
+    if (search !== undefined && search == '') {
+      props.FieldChange('listDoctor', []);
+      props.FieldChange('loadmore', { ...props.loadmore, offset: 0, isEnd: false });
+      props.GetDoctor(id, 10, 0);
+    }
+    if ((search && search.length > 3)) {
+      props.FieldChange('loadmore', { ...props.loadmore, offset: 0, isEnd: false });
+      props.FieldChange('listDoctor', []);
+      props.GetDoctor(id, 10, 0, search);
     }
   }, [search], 700);
 
-  const Item = () => (
-    <Button middle style={{ width: _screen_width / 2 - 40 }} borderRadius={10} color='#fff'
-      margin={10} paddingBottom={20} shadow>
-      <Layout marginTop={20} centered middle padding={20} borderRadius={50} color={colors?.PRIMARY_COLOR}>
-        <Image
-          source={item.assert} />
-      </Layout>
-      <Label bold marginTop={10} centered>{item.title}</Label>
-    </Button>
-  )
+  const onRefresh = () => {
+    setRefreshing(true);
+    props.FieldChange('loadmore', { ...props.loadmore, offset: 0, isEnd: false });
+    props.FieldChange('listDoctor', []);
+    props.GetDoctor(id, 10, 0, search);
+    setRefreshing(false);
+  }
+
+
+  const onEndReached = () => {
+    if (!props.loadmore.isEnd) {
+      let offset = props.loadmore.offset + 10;
+      props.FieldChange('loadmore', { ...props.loadmore, offset: offset });
+      props.GetDoctor(id, 10, offset, search);
+    }
+  }
+
+  const renderFooter = () => {
+    if (props.loadmore.isEnd) return <></>;
+    else return <Layout paddingVertical={5} marginBottom={15} centered middle>
+      <Spinner
+        isVisible
+        type='Circle'
+        size={sizes._22sdp}
+        color={colors?.BUTTON_COLOR}
+      />
+    </Layout>
+  }
 
   return (
-    <Transitioning.View
-      ref={ref}
-      style={{ flex: 1, flexGrow: 1 }}
-      transition={transition} >
-      <Layout style={{ flex: 1 }} color={colors?.PRIMARY_COLOR} paddingTop={_screen_height * 0.14} >
-        <Layout paddingHorizontal={20}>
-
+    <Layout style={{ flex: 1 }} color={colors?.PRIMARY_COLOR} paddingTop={_screen_height * 0.14} >
+      <Layout paddingHorizontal={20}>
         <Label marginBottom={10} size={sizes._15sdp}>Lựa chọn bác sĩ/chuyên gia yêu thích:</Label>
         <TextInputUI
           placeholder={'Tìm kiếm'}
@@ -90,20 +93,32 @@ const SelectDoctorLayout = (props: UIProps) => {
             setSearch(value);
           }}
         />
-        </Layout>
-        <Animated.ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-          <ItemDoctorLayout key={'1'} refItem={ref} transition={transition} />
-          <ItemDoctorLayout key={'2'} refItem={ref} transition={transition}/>
-          <ItemDoctorLayout key={'3'} refItem={ref} transition={transition}/>
-          <ItemDoctorLayout key={'4'} refItem={ref} transition={transition}/>
-        </Animated.ScrollView>
-
       </Layout>
-    </Transitioning.View>
+      <FlatList
+        keyExtractor={_keyExtractor}
+        data={props.listDoctor}
+        renderItem={({ item }) => (<ItemDoctorLayout item={item} />)}
+        onEndReachedThreshold={0.9}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        onEndReached={onEndReached}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={() => (!props.listDoctor?.length && (props.loadmore?.isEnd)) ?
+          <Label centered marginTop={20}>Không có bác sĩ</Label>
+          : <></>
+        }
+      />
+    </Layout>
   );
 };
-export default SelectDoctorLayout;
-function nativeMax(arg0: any, wait: any): any {
-  throw new Error('Function not implemented.');
-}
+const mapStateToProps = (state: ApplicationState) => ({
+  listDoctor: state.ContextState.listDoctor,
+  loadmore: state.ContextState.loadmore
+});
+const mapDispatchToProps = {
+  ...ContextAction
+};
 
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect)(SelectDoctorLayout as any);

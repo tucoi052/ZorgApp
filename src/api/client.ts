@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios, { AxiosRequestConfig } from 'axios';
+import { hideLoading, showLoading } from 'components/loading/LoadingModal';
 import { DOMAIN } from './endpoint';
 
 let axiosClient = axios.create();
@@ -28,6 +29,25 @@ axiosClient.defaults.headers.post['Content-Type'] = 'application/json';
 axiosClient.defaults.timeout = 15000;
 
 
+// axiosClient.interceptors.request.use(
+//     async (config: any) => {
+//         showLoading();
+//         return config;
+//     },
+// );
+
+
+axiosClient.interceptors.response.use(
+    response => {
+        hideLoading();
+        return response;
+    },
+    error => {
+        hideLoading();
+        return Promise.reject(error);
+    },
+);
+
 const RequestClient = class {
     constructor() {
         // this.init();
@@ -43,18 +63,18 @@ const RequestClient = class {
         });
 
     }
-    async get(endpoint: string, params = {}) {
+    async get(endpoint: string, params = {}, load = false) {
         try {
+            load && showLoading();
             const response = await axiosClient.get(endpoint, { params: params });
-
             return response;
         } catch (error) {
             this.handleError(error, endpoint);
         }
     }
-    async upload(endpoint: string, bodyParam: any) {
+    async upload(endpoint: string, bodyParam: any, load = false) {
         try {
-
+            load && showLoading();
             let axiosConfig: AxiosRequestConfig = {
                 headers: ({
                     "Origin": `${DOMAIN}`,
@@ -72,8 +92,9 @@ const RequestClient = class {
         }
     }
 
-    async post(endpoint: string, body?: {}, params = {}) {
+    async post(endpoint: string, body?: {}, params = {}, load = false) {
         try {
+            load && showLoading();
             const response = await axiosClient.post(endpoint, body, params);
             return response;
         } catch (error) {
@@ -81,8 +102,11 @@ const RequestClient = class {
         }
     }
 
-    async put(endpoint: string, body: {}, params = {}) {
+    async put(endpoint: string, body: {}, params = {}, load = false) {
         try {
+            console.log(load, 'cccc');
+            
+            load && showLoading();
             const response = await axiosClient.put(endpoint, body, params);
             return response;
         } catch (error) {
@@ -90,8 +114,9 @@ const RequestClient = class {
         }
     }
 
-    async delete(endpoint: string, body: any) {
+    async delete(endpoint: string, body: any, load = false) {
         try {
+            load && showLoading();
             const response = await axiosClient.delete(endpoint, { data: body });
             return response;
         } catch (error) {

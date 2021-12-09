@@ -12,6 +12,8 @@ target 'ZorgApp' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
+
   target 'ZorgAppTests' do
     inherit! :complete
     # Pods for testing

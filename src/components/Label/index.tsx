@@ -152,7 +152,6 @@ const Label = (props: LabelProps) => {
     upper && {textTransform: 'uppercase'},
     capital && {textTransform: 'capitalize'},
     style,
-    numberOfLines && {numberOfLines: numberOfLines},
     transparent && {backgroundColor: 'transparent'},
   ];
   return (

@@ -36,6 +36,7 @@ export const TabContainer = (props: Props) => {
         name={RouteName.HISTORYTAB}
         options={({ route, navigation }) => ({
           tabBarLabel: 'Lịch sử',
+          headerShown: false,
         })}
         component={HistoryScreen}
       />

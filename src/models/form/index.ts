@@ -12,7 +12,9 @@ export enum ControlType {
 }
 export enum TypeField {
   TEXT = 'text',
-  PASSWORD = 'password'
+  PASSWORD = 'password',
+  DATEPICKER = 'datepicker',
+  RADIOBUTTON = 'radiobutton',
 }
 
 export interface Control {
@@ -40,6 +42,9 @@ export enum Stage {
   SIGNUP,
   RESET_PASSWORD,
   RESET_PASSWORD_OTP,
+  PROFILE1,
+  PROFILE2,
+  FEEDBACK
 }
 export interface FormStage {
   stage: Stage;
