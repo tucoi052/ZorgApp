@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Image, _View } from 'react-native';
 import { Layout, Label, Button, TextInputUI } from 'components';
 import styled from 'styled-components/native';
@@ -25,7 +25,8 @@ interface UIProps {
   validationInfo2Schema: any,
   profile: Profile,
   route: any,
-  UpdateProfile: Function
+  UpdateProfile: Function,
+  GetProfile: Function
 }
 
 
@@ -35,6 +36,10 @@ const ProfileLayout = (props: UIProps) => {
   const type = props.route?.params?.type ?? '';
   const values = props.route?.params?.values ?? {};
   
+  useEffect(() => {
+    props.GetProfile();
+  }, [])
+
   const formik = useFormik({
     enableReinitialize: false,
     validationSchema: type != 'info2' ? props.validationInfoSchema : props.validationInfo2Schema,
@@ -90,6 +95,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 const mapDispatchToProps = {
   UpdateProfile: ContextAction.UpdateProfile,
+  GetProfile: ContextAction.GetProfile,
 };
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

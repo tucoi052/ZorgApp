@@ -16,5 +16,13 @@ export const Endpoint = {
     GET_DOCTOR: '/user/doctor/{departmentId}',
     GET_QUESTION: '/user/question',
     FEEDBACK: '/user/feedback',
+    BOOK_DOCTOR: '/user/schedule/meeting',
+    SCHEDULE: '/user/schedule',
+    HISTORY: '/user/schedule/history',
 
+    //admin
+    LOGIN_ADMIN: '/cms/auth/login',
+    REGISTER_DOCTOR: '/cms/auth/register-doctor/',
+    GET_USER: '/cms/user',
+    DOCTOR_ADMIN: '/cms/doctor',
 }

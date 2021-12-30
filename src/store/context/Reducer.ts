@@ -161,6 +161,79 @@ export const ActionCreators = {
 				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
 			}
 		},
+	BookDoctor: (doctorId, body): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.BOOK_DOCTOR + '/' + doctorId;
+				const rsp = await client.post(url, body, {}, true);
+				console.log(rsp?.data);
+				if (rsp?.status == 201 || rsp?.status == 200) {
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'detailBook',
+						fieldValue: rsp?.data,
+					});
+				}
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+				dispatch({
+					type: ActionType.FIELD_CHANGE,
+					fieldName: 'isBooking',
+					fieldValue: false,
+				});
+			}
+		},
+	GetSchedule: (): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				const rsp = await client.get(Endpoint.SCHEDULE, {}, true);
+				if (rsp?.status == 201 || rsp?.status == 200) {
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'listSchedule',
+						fieldValue: rsp.data,
+					});
+				}
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	GetHistory: (): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				const rsp = await client.get(Endpoint.HISTORY, {}, true);
+				if (rsp?.status == 201 || rsp?.status == 200) {
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'listHistory',
+						fieldValue: rsp.data,
+					});
+				}
+			} catch (error) {
+				console.log(error);
+				
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+		ChangeStatusSchedule: (id, status): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.SCHEDULE + '/status/' + id;
+				const rsp = await client.put(url, {'status': status}, true);
+				if (rsp?.status == 201 || rsp?.status == 200) {
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'isChangeStatus',
+						fieldValue: {...getState().ContextState.isChangeStatus, display: true},
+					});
+					showToast('info', 'Thay đổi thông tin thành công!');
+				}
+			} catch (error) {
+				console.log(error);
+				
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		}
 };
 
 export const Reducer: ReduxReducer<ContextState, KnowAction> = (

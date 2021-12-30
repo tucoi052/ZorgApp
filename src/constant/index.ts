@@ -10,6 +10,8 @@ export const passRegExp =
 export const RouteName = {
   HOME: 'HOME',
   SELECT_DOCTOR: 'SELECT_DOCTOR',
+  BOOK_DOCTOR: 'BOOK_DOCTOR',
+  DETAIL_BOOK: 'DETAIL_BOOK',
   SETTING: 'SETTING',
   PROFILE: 'PROFILE',
   QUESTION: 'QUESTION',

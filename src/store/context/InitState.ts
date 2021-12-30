@@ -194,6 +194,10 @@ export interface ContextState {
   loadmoreQuestion?: any,
   feedback?: FeedBack,
   validationFeedBackSchema?: any,
+  isChangeStatus?: any,
+  listSchedule?: any
+  listHistory?: any,
+  detailBook?: any
 }
 
 export const InitState: ContextState = {

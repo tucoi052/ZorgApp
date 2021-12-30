@@ -1,3 +1,4 @@
 import HomeScreen from "./Home";
 import SelectDoctorScreen from "./SelectDoctor";
-export { HomeScreen, SelectDoctorScreen };
+import BookDoctor from "./BookDoctor";
+export { HomeScreen, SelectDoctorScreen, BookDoctor };

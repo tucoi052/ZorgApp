@@ -22,7 +22,8 @@ import Animated, { measure, runOnUI, Transition, Transitioning, useAnimatedRef, 
 import { Doctor } from 'models/doctor';
 
 interface State {
-    item: Doctor
+    item: Doctor,
+    id: string
 }
 type UIProps = State;
 
@@ -71,7 +72,8 @@ const ItemDoctorLayout = (props: UIProps) => {
                     <Label bold marginBottom={10}>Thông tin bác sĩ:</Label>
                     <Label marginBottom={10}>{props.item.description}</Label>
                     <Label  style={{alignSelf: 'flex-end'}} marginBottom={10}>Lượt lựa chọn: {props.item.quantityChoose}</Label>
-                    <Button marginTop={10} borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle marginHorizontal={_screen_height * 0.12}>
+                    <Button marginTop={10} borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle marginHorizontal={_screen_height * 0.12}
+                    onPress={()=> navigation.navigate(RouteName.BOOK_DOCTOR, {item: props.item, id: props.id})}>
                         <Label color='#fff'>Chọn</Label>
                     </Button>
                 </View>

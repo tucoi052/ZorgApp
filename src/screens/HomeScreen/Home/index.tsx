@@ -39,10 +39,6 @@ const HomeScreen = (props: UIProps & typeof ContextAction) => {
   const navigation = useNavigation();
   const colors = useColor();
 
-  useEffect(() => {
-    props.GetProfile();
-  }, [])
-
   const Item = (item, index) => (
     <Button key={index} middle style={{ width: _screen_width / 2 - 40 }} borderRadius={10} color='#fff'
       margin={10} paddingBottom={20} shadow onPress={() => {

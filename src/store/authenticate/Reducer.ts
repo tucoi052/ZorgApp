@@ -10,6 +10,7 @@ import { Endpoint } from "api/endpoint";
 import Toast from "react-native-toast-message";
 import { showToast } from "components";
 import { showLoading } from "components/loading/LoadingModal";
+import AsyncStorage from "@react-native-community/async-storage";
 
 interface LoadedAction {
   type: string;
@@ -48,9 +49,14 @@ export const ActionCreators = {
         const rsp = await client.post(Endpoint.LOGIN, body, true);
         if (rsp && rsp.status == 201) {
           console.log(rsp.data);
-
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'userType',
+            fieldValue: rsp.data.user.userType,
+          });
           await setToken(rsp.data.accessToken);
           await setRefreshToken(rsp.data.accessToken);
+          await AsyncStorage.setItem('userType', rsp.data.user.userType.toString());
           dispatch({
             type: ActionType.FIELD_CHANGE,
             fieldName: 'isLoggedIn',
@@ -58,6 +64,38 @@ export const ActionCreators = {
           });
         }
       } catch (error) {
+        console.log(error);
+
+        showToast('error', 'Sai tên tài khoản hoặc mật khẩu!', 'Vui lòng kiểm tra lại!');
+      }
+    },
+  LoginAdmin: (email: string, password: string): ThunkAction<KnownAction> =>
+    async (dispatch, getState) => {
+      try {
+        let body = {
+          'email': email,
+          'password': password
+        }
+        const rsp = await client.post(Endpoint.LOGIN_ADMIN, body, true);
+        if (rsp && rsp.status == 201) {
+          console.log(rsp.data);
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'userType',
+            fieldValue: rsp.data.user.userType,
+          });
+          await setToken(rsp.data.accessToken);
+          await setRefreshToken(rsp.data.accessToken);
+          await AsyncStorage.setItem('userType', rsp.data.user.userType.toString());
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'isLoggedIn',
+            fieldValue: true,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+
         showToast('error', 'Sai tên tài khoản hoặc mật khẩu!', 'Vui lòng kiểm tra lại!');
       }
     },

@@ -4,7 +4,8 @@ import { RouteName } from '../constant';
 import { OPTS_COMMON } from './navigationConfig';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { View } from 'react-native';
-import { HomeScreen, SelectDoctorScreen } from 'screens/HomeScreen';
+import { BookDoctor, HomeScreen, SelectDoctorScreen } from 'screens/HomeScreen';
+import DetailBook from 'screens/HomeScreen/DetailBook';
 
 const Stack = createStackNavigator();
 type Props = {};
@@ -26,6 +27,22 @@ export const HomeStackContainer = (props: Props) => {
       <Stack.Screen
         name={RouteName.SELECT_DOCTOR}
         component={SelectDoctorScreen}
+        options={{
+          headerTransparent: true,
+          headerTitle: '',
+        }}
+      />
+      <Stack.Screen
+        name={RouteName.BOOK_DOCTOR}
+        component={BookDoctor}
+        options={{
+          headerTransparent: true,
+          headerTitle: '',
+        }}
+      />
+      <Stack.Screen
+        name={RouteName.DETAIL_BOOK}
+        component={DetailBook}
         options={{
           headerTransparent: true,
           headerTitle: '',

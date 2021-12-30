@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Doctor } from 'models/doctor';
 import Spinner from 'react-native-spinkit';
+import { useFocusEffect } from '@react-navigation/core';
 
 interface UIProps {
   navigation: any;
@@ -29,6 +30,9 @@ const SelectDoctorLayout = (props: UIProps & typeof ContextAction) => {
   const id = props.route?.params?.id ?? '';
   const _keyExtractor = (item: any, index: number) => index.toString();
 
+  useFocusEffect(()=>{
+    props.FieldChange('detailBook', undefined);
+  })
 
   useDebouncedEffect(() => {
     if (search !== undefined && search == '') {
@@ -97,7 +101,7 @@ const SelectDoctorLayout = (props: UIProps & typeof ContextAction) => {
       <FlatList
         keyExtractor={_keyExtractor}
         data={props.listDoctor}
-        renderItem={({ item }) => (<ItemDoctorLayout item={item} />)}
+        renderItem={({ item }) => (<ItemDoctorLayout item={item} id={id} />)}
         onEndReachedThreshold={0.9}
         onRefresh={onRefresh}
         refreshing={refreshing}
