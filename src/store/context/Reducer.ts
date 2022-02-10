@@ -35,6 +35,8 @@ export const ActionCreators = {
 				try {
 					const rsp = await client.get(Endpoint.PROFILE);
 					if (rsp?.status == 200) {
+						console.log(rsp.data);
+						
 						dispatch({
 							type: ActionType.FIELD_CHANGE,
 							fieldName: 'profile',
@@ -186,8 +188,10 @@ export const ActionCreators = {
 	GetSchedule: (): ThunkAction<KnowAction> =>
 		async (dispatch, getState) => {
 			try {
-				const rsp = await client.get(Endpoint.SCHEDULE, {}, true);
+				const rsp = await client.get(Endpoint.SCHEDULE, {});
 				if (rsp?.status == 201 || rsp?.status == 200) {
+					console.log(rsp.data);
+					
 					dispatch({
 						type: ActionType.FIELD_CHANGE,
 						fieldName: 'listSchedule',
@@ -201,7 +205,7 @@ export const ActionCreators = {
 	GetHistory: (): ThunkAction<KnowAction> =>
 		async (dispatch, getState) => {
 			try {
-				const rsp = await client.get(Endpoint.HISTORY, {}, true);
+				const rsp = await client.get(Endpoint.HISTORY, {});
 				if (rsp?.status == 201 || rsp?.status == 200) {
 					dispatch({
 						type: ActionType.FIELD_CHANGE,
@@ -211,29 +215,189 @@ export const ActionCreators = {
 				}
 			} catch (error) {
 				console.log(error);
-				
+
 				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
 			}
 		},
-		ChangeStatusSchedule: (id, status): ThunkAction<KnowAction> =>
+	ChangeStatusSchedule: (id, status): ThunkAction<KnowAction> =>
 		async (dispatch, getState) => {
 			try {
 				let url = Endpoint.SCHEDULE + '/status/' + id;
-				const rsp = await client.put(url, {'status': status}, true);
+				const rsp = await client.put(url, { 'status': status }, true);
 				if (rsp?.status == 201 || rsp?.status == 200) {
 					dispatch({
 						type: ActionType.FIELD_CHANGE,
 						fieldName: 'isChangeStatus',
-						fieldValue: {...getState().ContextState.isChangeStatus, display: true},
+						fieldValue: { ...getState().ContextState.isChangeStatus, display: true },
 					});
 					showToast('info', 'Thay đổi thông tin thành công!');
 				}
 			} catch (error) {
 				console.log(error);
-				
+
 				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
 			}
-		}
+		},
+	GetUserAdmin: (limit: number, offset: number, search?: string): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.GET_USER;
+				url += `?limit=${limit}&offset=${offset}`;
+				if (search && search != '') url += `&search=${search}`;
+				console.log(url);
+				let listUserAdmin = getState().ContextState.listUserAdmin ?? [];
+				const rsp = await client.get(url);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					console.log(rsp.data);
+
+					if (rsp.data.items.length == 0)
+						dispatch({
+							type: ActionType.FIELD_CHANGE,
+							fieldName: 'loadmoreUser',
+							fieldValue: {
+								offset: offset,
+								isEnd: true
+							},
+						});
+					else
+						dispatch({
+							type: ActionType.FIELD_CHANGE,
+							fieldName: 'listUserAdmin',
+							fieldValue: [...listUserAdmin, ...rsp.data.items],
+						});
+
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	GetDoctorAdmin: (limit: number, offset: number, search?: string): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.DOCTOR_ADMIN;
+				url += `?limit=${limit}&offset=${offset}`;
+				if (search && search != '') url += `&search=${search}`;
+				console.log(url);
+				let listDoctor = getState().ContextState.listDoctor ?? [];
+				const rsp = await client.get(url);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					// console.log(rsp.data);
+
+					if (rsp.data.items.length == 0)
+						dispatch({
+							type: ActionType.FIELD_CHANGE,
+							fieldName: 'loadmore',
+							fieldValue: {
+								offset: offset,
+								isEnd: true
+							},
+						});
+					else
+						dispatch({
+							type: ActionType.FIELD_CHANGE,
+							fieldName: 'listDoctor',
+							fieldValue: [...listDoctor, ...rsp.data.items],
+						});
+
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	AddDoctor: (doctor: any): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.DOCTOR_ADMIN;
+				const rsp = await client.post(url, doctor);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'doctorId',
+						fieldValue: rsp.data.id
+					});
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	UpdateDoctor: (doctor: any): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.DOCTOR_ADMIN + '/' + doctor.id;
+				delete doctor.id;
+				delete doctor.quantityChoose;
+				console.log(doctor, url);
+				const rsp = await client.put(url, doctor);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					showToast('info', 'Cập nhật thông tin thành công!');
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'doctorId',
+						fieldValue: 'updateDone'
+					});
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	DeleteDoctor: (id: any, cb: any): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let url = Endpoint.DOCTOR_ADMIN + '/' + id;
+				const rsp = await client.delete(url, {});
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					showToast('info', 'Cập nhật thông tin thành công!');
+					cb();
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	AddAccount: (body: any): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				let id = getState().ContextState.doctorId;
+				let url = Endpoint.ADD_ACCOUNT + id;
+				const rsp = await client.post(url, body);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					showToast('info', 'Đăng ký tài khoản thành công!');
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'doctorId',
+						fieldValue: undefined
+					});
+				}
+
+			} catch (error) {
+				if (error.response.data.message == 'EmailExisted')
+					showToast('error', 'Tài khoản đã tồn tại!', 'Vui lòng thử lại!');
+				else
+					showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
+	GetFeedback: (): ThunkAction<KnowAction> =>
+		async (dispatch, getState) => {
+			try {
+				const rsp = await client.get(Endpoint.FEEDBACK_ADMN);
+				if (rsp?.status == 200 || rsp?.status == 201) {
+					console.log(rsp.data, 'cc');
+
+					dispatch({
+						type: ActionType.FIELD_CHANGE,
+						fieldName: 'feedbackAdmin',
+						fieldValue: rsp.data
+					});
+				}
+
+			} catch (error) {
+				showToast('error', 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+			}
+		},
 };
 
 export const Reducer: ReduxReducer<ContextState, KnowAction> = (

@@ -78,6 +78,45 @@ export const MyTabBar = ({ state, descriptors, navigation }) => {
 				/>
 				{focused && VectorFocus()}
 			</Layout>
+		if (label == 'Người dùng')
+			return <Layout middle>
+				<Image
+					style={{
+						width: sizes._22sdp,
+						height: sizes._22sdp,
+						resizeMode: 'contain',
+						tintColor: focused ? '#80EDE6' : 'grey',
+					}}
+					source={TabIcon.person}
+				/>
+				{focused && VectorFocus()}
+			</Layout>
+		if (label == 'Bác sĩ')
+			return <Layout middle>
+				<Image
+					style={{
+						width: sizes._22sdp,
+						height: sizes._22sdp,
+						resizeMode: 'contain',
+						tintColor: focused ? '#80EDE6' : 'grey',
+					}}
+					source={TabIcon.doctor_tab}
+				/>
+				{focused && VectorFocus()}
+			</Layout>
+		if (label == 'Phản hồi')
+			return <Layout middle>
+				<Image
+					style={{
+						width: sizes._22sdp,
+						height: sizes._22sdp,
+						resizeMode: 'contain',
+						tintColor: focused ? '#80EDE6' : 'grey',
+					}}
+					source={TabIcon.chat}
+				/>
+				{focused && VectorFocus()}
+			</Layout>
 	}
 
 	return (

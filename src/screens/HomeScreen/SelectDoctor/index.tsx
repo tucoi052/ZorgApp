@@ -40,7 +40,7 @@ const SelectDoctorLayout = (props: UIProps & typeof ContextAction) => {
       props.FieldChange('loadmore', { ...props.loadmore, offset: 0, isEnd: false });
       props.GetDoctor(id, 10, 0);
     }
-    if ((search && search.length > 3)) {
+    if ((search && search.length > 1)) {
       props.FieldChange('loadmore', { ...props.loadmore, offset: 0, isEnd: false });
       props.FieldChange('listDoctor', []);
       props.GetDoctor(id, 10, 0, search);

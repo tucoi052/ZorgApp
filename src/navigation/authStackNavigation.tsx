@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { ForgotPasswordScreen, SignInScreen, SignUpScreen, WelcomeScreen } from "screens/AuthScreen";
+import { ForgotPasswordScreen, NewPasswordScreen, OTPScreen, SignInScreen, SignUpScreen, WelcomeScreen } from "screens/AuthScreen";
 import { RouteName } from "constant";
 import { OPTS_COMMON } from "./navigationConfig";
 
@@ -42,6 +42,22 @@ export class AuthStack extends React.Component<Props> {
         <Stack.Screen
           name={RouteName.FORGOTPASSWORD}
           component={ForgotPasswordScreen}
+          options={{
+            headerTransparent: true,
+            headerTitle: "",
+          }}
+        />
+        <Stack.Screen
+          name={RouteName.OTP}
+          component={OTPScreen}
+          options={{
+            headerTransparent: true,
+            headerTitle: "",
+          }}
+        />
+        <Stack.Screen
+          name={RouteName.NEW_PASSWORD}
+          component={NewPasswordScreen}
           options={{
             headerTransparent: true,
             headerTitle: "",

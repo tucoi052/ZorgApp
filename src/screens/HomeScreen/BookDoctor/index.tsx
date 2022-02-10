@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Text } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, Text } from 'react-native';
 import { Layout, Label, Button, TextInputUI } from 'components';
 import styled from 'styled-components/native';
 import { useColor } from 'hooks';
@@ -39,6 +39,12 @@ const BookDoctor = (props: UIProps & typeof ContextAction) => {
 
   return (
     <Layout paddingHorizontal={20} style={{ flex: 1 }} color={colors?.PRIMARY_COLOR} paddingTop={_screen_height * 0.14}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        enabled={true}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+
       <Label size={sizes._15sdp}>Thời gian khám</Label>
       <Label marginLeft={10} marginVertical={10}>Giờ</Label>
       <Button paddingHorizontal={40} paddingVertical={10} borderRadius={15} color='#fff' style={{ alignSelf: 'center' }} shadow
@@ -81,6 +87,8 @@ const BookDoctor = (props: UIProps & typeof ContextAction) => {
         <Label size={sizes._14sdp} marginRight={10}>Tiếp theo</Label>
         <Image source={IconImage.arrowLeft} style={{ width: 17, height: 19, resizeMode: 'contain' }} />
       </Button>
+      </ScrollView>
+      </KeyboardAvoidingView>
       <DatePicker
         modal
         open={modal}

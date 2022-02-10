@@ -5,7 +5,7 @@ const showToast = (type?, text1?, text2?) => {
         type: type ?? 'info',
         text1: text1 ?? 'Thông tin !',
         text2: text2,
-        visibilityTime: 2000
+        visibilityTime: 3500
     });
 }
 

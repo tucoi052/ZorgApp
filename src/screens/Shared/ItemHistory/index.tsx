@@ -64,7 +64,7 @@ const ItemHistoryLayout = (props: UIProps) => {
                     <Label numberOfLines={2}>{props.item?.room}</Label>
                 </Layout>
             </Layout>
-            <Button disable={!props.ChangeStatusSchedule} marginTop={10} padding={10} marginHorizontal={_screen_width * 0.25} borderRadius={10} centered middle color={userType == 3 || !props.ChangeStatusSchedule ? color?.BUTTON_COLOR : '#ff4056'}
+            <Button disable={!props.ChangeStatusSchedule} marginTop={10} padding={10} marginHorizontal={_screen_width * 0.2} borderRadius={10} centered middle color={userType == 3 || !props.ChangeStatusSchedule ? color?.BUTTON_COLOR : '#ff4056'}
                 onPress={() => {
                     console.log(props.item?.status);
                     props.ChangeStatusSchedule(props.item?.id, userType == 3 ? 1 : 2);

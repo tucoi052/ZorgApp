@@ -15,6 +15,7 @@ export enum TypeField {
   PASSWORD = 'password',
   DATEPICKER = 'datepicker',
   RADIOBUTTON = 'radiobutton',
+  MODAL = 'modal',
 }
 
 export interface Control {
@@ -40,11 +41,14 @@ export enum Stage {
   ACTIVE_SUCCESS,
   LOGIN,
   SIGNUP,
+  NEWPASSWORD,
   RESET_PASSWORD,
   RESET_PASSWORD_OTP,
   PROFILE1,
   PROFILE2,
-  FEEDBACK
+  FEEDBACK,
+  ADD_DOCTOR,
+  ADD_ACCOUNT
 }
 export interface FormStage {
   stage: Stage;

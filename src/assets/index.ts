@@ -3,6 +3,7 @@ export const TabIcon = {
     schedule: require('./images/schedule.png'),
     chat: require('./images/chat.png'),
     person: require('./images/person.png'),
+    doctor_tab: require('./images/doctor_tab.png'),
 }
 export const IconImage = {
     back: require('./images/back.png'),

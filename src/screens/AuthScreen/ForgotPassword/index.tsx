@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     TouchableWithoutFeedback,
     Keyboard,
@@ -17,20 +17,47 @@ import { Register } from 'models/auth';
 import { Image } from 'react-native';
 import { sizes, _screen_height, _screen_width } from 'utils/sizes';
 import { useColor, useKeyboard } from 'hooks';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
+import { RouteName } from 'constant';
 
 interface State {
     forms?: FormStage[];
-    register: Register;
-    validationSignUpSchema: any;
+    forgotPassword: any;
+    validationForgotSchema: any;
+    navigation: any
 }
 type UIProps = State & typeof ContextAction & typeof AuthAction;
 
 const ForgotPasswordLayout = (props: UIProps) => {
     const color = useColor();
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        validationSchema: props.validationForgotSchema,
+        initialValues: { ...props.forgotPassword },
+        onSubmit: (values) => {
+            props.ForgotPassword(values);
+        },
+    });
+    const errorMessage = (fieldName: string) => {
+        if (formik.touched[fieldName] && formik.errors[fieldName]) {
+            return formik.errors[fieldName]?.toString();
+        }
+        return undefined;
+    };
+    const handleForgot = () => {
+        formik.handleSubmit();
+    };
+
+    useEffect(() => {
+        if (isFocused && props.forgotPassword && props.forgotPassword?.otpDone == '1') {
+            props.navigation.replace(RouteName.OTP);
+        }
+    }, [props.forgotPassword])
 
     return (
         <Layout paddingHorizontal={40} flex color={color?.PRIMARY_COLOR} paddingTop={_screen_height * 0.14}>
@@ -46,13 +73,14 @@ const ForgotPasswordLayout = (props: UIProps) => {
                     keyboardType={'email-address'}
                     layoutstyle={{ backgroundColor: '#fff' }}
                     contentstyle={{ marginHorizontal: 10 }}
-                    // errorMessage={errorMessage(c.fieldName)}
-                    // textValue={formik.values[c.fieldName]}
-                    // onChangeText={(text: string) => {
-                    //     formik.setFieldValue(c.fieldName, text);
-                    // }}
+                    errorMessage={errorMessage('email')}
+                    textValue={formik.values['email']}
+                    onChangeText={(text: string) => {
+                        formik.setFieldValue('email', text);
+                    }}
                 />
-                <Button middle shadow marginTop={35} borderRadius={10} padding={15} color={color?.BUTTON_COLOR}>
+                <Button middle shadow marginTop={35} borderRadius={10} padding={15} color={color?.BUTTON_COLOR}
+                    onPress={handleForgot}>
                     <Label color='#fff' bold>Lấy lại mật khẩu</Label>
                 </Button>
             </KeyboardAvoidingView>
@@ -60,9 +88,8 @@ const ForgotPasswordLayout = (props: UIProps) => {
     );
 };
 const mapStateToProps = (state: ApplicationState) => ({
-    forms: state.AuthenticateState.forms,
-    register: state.AuthenticateState.register,
-    validationSignUpSchema: state.AuthenticateState.validationSignUpSchema,
+    forgotPassword: state.AuthenticateState.forgotPassword,
+    validationForgotSchema: state.AuthenticateState.validationForgotSchema,
 });
 const mapDispatchToProps = {
     ...AuthAction,

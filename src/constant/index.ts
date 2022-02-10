@@ -19,13 +19,20 @@ export const RouteName = {
   NOTIFICATION: 'NOTIFICATION',
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
+  OTP: 'OTP',
+  NEW_PASSWORD: 'NEW_PASSWORD',
   WELCOME: 'WELCOME',
   FORGOTPASSWORD: 'FORGOTPASSWORD',
+  ADDDOCTOR: 'ADDDOCTOR',
+  ADD_ACCOUNT: 'ADD_ACCOUNT',
 
   HOMETAB: 'Trang chủ',
   SCHEDULETAB: 'Lịch',
   SETTINGTAB: 'Cài đặt',
   HISTORYTAB: 'Lịch sử',
+  USERTAB: 'Người dùng',
+  DOCTORTAB: 'Bác sĩ',
+  FEEDBACKTAB: 'Phản hồi',
 };
 
 export type RouteNameParam = {

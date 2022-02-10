@@ -92,6 +92,33 @@ export const Forms: FormStage[] = [
       },
     ],
   },
+  {
+    stage: Stage.NEWPASSWORD,
+    title: 'NewPassword',
+    descriptions: '',
+    rows: [
+      {
+        controls: [
+          {
+            fieldName: 'password',
+            label: 'Password',
+            placeholder: 'Mật khẩu',
+            type: TypeField.PASSWORD,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: "repeatPassword",
+            label: "Re-password",
+            placeholder: "Xác nhận mật khẩu",
+            type: TypeField.PASSWORD,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const validationSignUpSchema = Yup.object().shape({
@@ -128,6 +155,25 @@ export const validationSchema = Yup.object().shape({
   password: Yup.string().required('Nhập password!'),
 });
 
+export const validationForgotSchema = Yup.object().shape({
+  email: Yup.string()
+    .required('Nhập email!')
+    .matches(emailRegExp, 'Email không đúng định dạng user@gmail.com'),
+});
+
+export const validationNewPasswordSchema = Yup.object().shape({
+  password: Yup.string().nullable()
+    .matches(/^.{8,20}$/,
+      'Mật khẩu phải từ 8 đến 20 ký tự!')
+    .required('Nhập mật khẩu!'),
+  repeatPassword: Yup.string().nullable()
+  .required('Nhập xác nhận mật khẩu!')
+  .oneOf(
+    [Yup.ref('password'), null],
+    'Xác nhận mật khẩu không đúng!',
+  ),
+});
+
 export interface AuthenticateState {
   stage: Stage;
   forms: FormStage[];
@@ -135,10 +181,14 @@ export interface AuthenticateState {
   isLoggedIn?: boolean;
   validationSchema?: any;
   validationSignUpSchema?: any;
+  validationForgotSchema?: any;
+  validationNewPasswordSchema: any;
   commited: boolean;
   message?: DialogMessage;
   register?: Register;
   email?: string;
+  forgotPassword?: any
+  newPassword?: any
 }
 export const InitState: AuthenticateState = {
   stage: Stage.LOGIN,
@@ -154,8 +204,18 @@ export const InitState: AuthenticateState = {
     password: '',
     repeatPassword: '',
   },
+  forgotPassword: {
+    email: '',
+    type: 2
+  },
+  newPassword: {
+    password: '',
+    repeatPassword: ''
+  },
   validationSchema: validationSchema,
   validationSignUpSchema: validationSignUpSchema,
+  validationForgotSchema: validationForgotSchema,
+  validationNewPasswordSchema: validationNewPasswordSchema,
   commited: false,
   isLoggedIn: false,
 };

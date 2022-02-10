@@ -25,4 +25,6 @@ export const Endpoint = {
     REGISTER_DOCTOR: '/cms/auth/register-doctor/',
     GET_USER: '/cms/user',
     DOCTOR_ADMIN: '/cms/doctor',
+    ADD_ACCOUNT: '/cms/auth/register-doctor/',
+    FEEDBACK_ADMN: '/cms/feedback'
 }

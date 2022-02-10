@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text } from 'react-native';
 import { Layout, Label, Button } from 'components';
 import styled from 'styled-components/native';
 import { useColor } from 'hooks';
 import { IconImage, ImageAssets } from 'assets';
-import { sizes, _screen_width } from 'utils/sizes';
+import { sizes, _screen_height, _screen_width } from 'utils/sizes';
 import { ApplicationState } from 'store/configureAction';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -13,12 +13,14 @@ import { ActionCreators as ContextAction } from 'store/context';
 import alertDefaultTitle from 'utils/AlertDefaultTitle';
 import { useNavigation } from '@react-navigation/core';
 import { RouteName } from 'constant';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface UIProps {
   navigation: any;
   Logout: Function;
   GetQuestion: Function;
   FieldChange: Function;
+  GetProfile: Function;
 }
 
 const dataItem = [
@@ -44,12 +46,22 @@ const SettingLayout = (props: UIProps) => {
   const colors = useColor();
   const navigation = useNavigation();
 
+  useEffect(() => {
+    getType();
+  }, [])
+
+  const getType = async () => {
+    let type = await AsyncStorage.getItem('userType') ?? 2;
+    if (type == 2) props.GetProfile();
+  }
+
   const onPressItem = (index) => {
-    if (index == 0)
+    if (index == 0) {
       navigation.navigate(RouteName.PROFILE);
-    if (index == 1){
+    }
+    if (index == 1) {
       props.FieldChange('listQuestion', []);
-      props.GetQuestion(10,0);
+      props.GetQuestion(10, 0);
       navigation.navigate(RouteName.QUESTION);
     }
     if (index == 2)
@@ -78,7 +90,7 @@ const SettingLayout = (props: UIProps) => {
     <Layout style={{ flex: 1 }} color={colors?.PRIMARY_COLOR}>
       <Layout middle>
         <Image
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, height: _screen_height * 0.3, resizeMode: 'contain' }}
           source={ImageAssets.logo} />
       </Layout>
       <Label centered bold size={sizes._19sdp}>Bạn cần hỗ trợ dịch vụ nào ?</Label>
@@ -97,7 +109,8 @@ const mapStateToProps = (state: ApplicationState) => ({
 const mapDispatchToProps = {
   Logout: AuthAction.Logout,
   GetQuestion: ContextAction.GetQuestion,
-  FieldChange: ContextAction.FieldChange
+  FieldChange: ContextAction.FieldChange,
+  GetProfile: ContextAction.GetProfile
 };
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

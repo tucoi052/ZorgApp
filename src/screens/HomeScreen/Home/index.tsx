@@ -4,7 +4,7 @@ import { Layout, Label, Button } from 'components';
 import styled from 'styled-components/native';
 import { useColor } from 'hooks';
 import { IconImage, ImageAssets } from 'assets';
-import { sizes, _screen_width } from 'utils/sizes';
+import { sizes, _screen_height, _screen_width } from 'utils/sizes';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { ApplicationState } from 'store/configureAction';
@@ -60,7 +60,7 @@ const HomeScreen = (props: UIProps & typeof ContextAction) => {
     <Layout style={{ flex: 1 }} color={colors?.PRIMARY_COLOR}>
       <Layout middle>
         <Image
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, height: _screen_height * 0.3, resizeMode: 'contain' }}
           source={ImageAssets.logo} />
       </Layout>
       <Label centered bold size={sizes._19sdp}>Bạn cần hỗ trợ dịch vụ nào ?</Label>

@@ -59,7 +59,7 @@ export const Forms: FormStage[] = [
           },
         ],
       },
-      
+
     ],
   },
   {
@@ -136,6 +136,100 @@ export const Forms: FormStage[] = [
       },
     ],
   },
+  {
+    stage: Stage.ADD_DOCTOR,
+    title: 'Profile',
+    descriptions: '',
+    rows: [
+      {
+        controls: [
+          {
+            fieldName: 'fullName',
+            label: 'Họ tên',
+            placeholder: 'Họ tên',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'hospital',
+            label: 'Bệnh viện',
+            placeholder: 'Bệnh viện',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'department',
+            label: 'Khoa',
+            placeholder: 'Khoa',
+            type: TypeField.MODAL,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'description',
+            label: 'Mô tả',
+            placeholder: 'Mô tả',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stage: Stage.ADD_ACCOUNT,
+    title: 'Profile',
+    descriptions: '',
+    rows: [
+      {
+        controls: [
+          {
+            fieldName: 'lastName',
+            label: 'Họ',
+            placeholder: 'Họ',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'firstName',
+            label: 'Tên',
+            placeholder: 'Tên',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'email',
+            label: 'Email',
+            placeholder: 'Email',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+      {
+        controls: [
+          {
+            fieldName: 'password',
+            label: 'Mật khẩu',
+            placeholder: 'Mật khẩu',
+            type: TypeField.TEXT,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 
@@ -152,7 +246,7 @@ export const validationInfoSchema = Yup.object().shape({
   dob: Yup.string().nullable()
     .required('Chọn ngày sinh!'),
   gender: Yup.string().nullable()
-  .required('Chọn giới tính!'),
+    .required('Chọn giới tính!'),
 });
 
 export const validationInfo2Schema = Yup.object().shape({
@@ -175,6 +269,33 @@ export const validationFeedBackSchema = Yup.object().shape({
     .required('Nhập nội dung!')
 });
 
+export const validationAddDoctorSchema = Yup.object().shape({
+  fullName: Yup.string()
+    .required('Nhập họ tên!'),
+  hospital: Yup.string()
+    .required('Nhập bệnh viện!'),
+  department: Yup.number().nullable()
+    .required('Chọn khoa!'),
+  description: Yup.string()
+    .required('Nhập mô tả!'),
+});
+
+export const validationAddAccountSchema = Yup.object().shape({
+  lastName: Yup.string()
+    .required('Nhập tên!')
+    .matches(nameRegExp, 'Tên không được chứa ký tự đặc biệt!'),
+  firstName: Yup.string()
+    .required('Nhập họ!')
+    .matches(nameRegExp, 'Họ không được chứa ký tự đặc biệt!'),
+  email: Yup.string()
+    .required('Nhập email!')
+    .matches(emailRegExp, 'Email không đúng định dạng user@gmail.com'),
+  password: Yup.string()
+    .matches(/^.{8,20}$/,
+      'Mật khẩu phải từ 8 đến 20 ký tự!')
+    .required('Nhập mật khẩu!'),
+});
+
 export interface ContextState {
   isConnection: boolean;
   version?: string;
@@ -194,10 +315,18 @@ export interface ContextState {
   loadmoreQuestion?: any,
   feedback?: FeedBack,
   validationFeedBackSchema?: any,
+  validationAddDoctorSchema?: any,
+  validationAddAccountSchema?: any,
   isChangeStatus?: any,
   listSchedule?: any
   listHistory?: any,
-  detailBook?: any
+  detailBook?: any,
+  listUserAdmin?: any
+  loadmoreUser?: any,
+  doctor?: any,
+  accountDoctor?: any,
+  doctorId?: any,
+  feedbackAdmin?: any
 }
 
 export const InitState: ContextState = {
@@ -216,9 +345,27 @@ export const InitState: ContextState = {
     offset: 0,
     isEnd: false
   },
+  loadmoreUser: {
+    offset: 0,
+    isEnd: false
+  },
   feedback: {
     title: '',
     content: ''
   },
-  validationFeedBackSchema: validationFeedBackSchema
+  doctor: {
+    fullName: "",
+    hospital: "",
+    department: null,
+    description: ""
+  },
+  accountDoctor: {
+    email: "",
+    firstName: "",
+    lastName: '',
+    password: ""
+  },
+  validationFeedBackSchema: validationFeedBackSchema,
+  validationAddDoctorSchema: validationAddDoctorSchema,
+  validationAddAccountSchema: validationAddAccountSchema
 };

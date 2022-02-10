@@ -25,36 +25,31 @@ import { RouteName } from 'constant';
 
 interface State {
   forms?: FormStage[];
-  user: LoginUser;
-  validationSchema: any;
-  route: any
+  forgotPassword: any;
+  validationNewPasswordSchema: any;
+  newPassword: any
 }
-type UIProps = State & typeof AuthAction;
+type UIProps = State & typeof ContextAction & typeof AuthAction;
 
-const SignInLayout = (props: UIProps) => {
+const NewPasswordLayout = (props: UIProps) => {
   const color = useColor();
   const navigation = useNavigation();
-  const isAdmin = props.route?.params?.isAdmin ?? false;
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
   useEffect(()=>{
-    if(isFocused) {
-      props.FieldChange('forgotPassword', {
-        email: '',
-        type: 2
-      })
+    if(isFocused && props.forgotPassword?.otpDone == '3') {
+      navigation.goBack();
     }
-  },[isFocused])
+  },[props.forgotPassword])
 
   const formik = useFormik({
     enableReinitialize: true,
-    validationSchema: props.validationSchema,
-    initialValues: { ...props.user },
-    onSubmit: (values: LoginUser) => {
-      if (isAdmin)
-        props.LoginAdmin(values.email, values.password);
-      else
-        props.Login(values.email, values.password);
+    validationSchema: props.validationNewPasswordSchema,
+    initialValues: { ...props.newPassword },
+    onSubmit: (values) => {
+      delete props.forgotPassword.otpDone;
+      delete props.forgotPassword.type;
+      props.NewPassword({ ...props.forgotPassword, newPassword: values.password });
     },
   });
   const errorMessage = (fieldName: string) => {
@@ -63,11 +58,11 @@ const SignInLayout = (props: UIProps) => {
     }
     return undefined;
   };
-  const handleLogin = () => {
+  const handle = () => {
     formik.handleSubmit();
   };
   const Form = () => {
-    let form = props.forms?.find(e => e.stage === Stage.LOGIN);
+    let form = props.forms?.find(e => e.stage === Stage.NEWPASSWORD);
 
     if (form) {
       return (
@@ -105,15 +100,12 @@ const SignInLayout = (props: UIProps) => {
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         enabled={true}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-          <Label marginBottom={30} bold centered size={sizes._19sdp}>Đăng Nhập</Label>
+          <Label marginBottom={30} bold centered size={sizes._19sdp}>Mật khẩu mới</Label>
           {Form()}
           <Button middle shadow marginTop={35} borderRadius={10} padding={15} color={color?.BUTTON_COLOR}
-            onPress={handleLogin}>
-            <Label color='#fff' bold>Đăng nhập</Label>
+            onPress={handle}>
+            <Label color='#fff' bold>Thay đổi</Label>
           </Button>
-          {!isAdmin && <Button marginTop={10} onPress={() => navigation.navigate(RouteName.FORGOTPASSWORD)}>
-            <Label>Bạn quên mật khẩu ?</Label>
-          </Button>}
         </ScrollView>
       </KeyboardAvoidingView>
     </Layout>
@@ -121,8 +113,9 @@ const SignInLayout = (props: UIProps) => {
 };
 const mapStateToProps = (state: ApplicationState) => ({
   forms: state.AuthenticateState.forms,
-  user: state.AuthenticateState.user,
-  validationSchema: state.AuthenticateState.validationSchema
+  forgotPassword: state.AuthenticateState.forgotPassword,
+  newPassword: state.AuthenticateState.newPassword,
+  validationNewPasswordSchema: state.AuthenticateState.validationNewPasswordSchema
 });
 const mapDispatchToProps = {
   ...AuthAction,
@@ -130,4 +123,4 @@ const mapDispatchToProps = {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(SignInLayout as any);
+export default compose(withConnect)(NewPasswordLayout as any);

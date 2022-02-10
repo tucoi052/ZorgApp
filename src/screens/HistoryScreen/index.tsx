@@ -1,5 +1,5 @@
 import { ImageAssets } from 'assets';
-import { Layout } from 'components';
+import { Label, Layout } from 'components';
 import { useColor } from 'hooks';
 import React, { useEffect } from 'react';
 import { FlatList, Image, Text } from 'react-native';
@@ -29,14 +29,16 @@ const HistoryScreen = (props: UIProps) => {
     <Layout flex color={color?.PRIMARY_COLOR} >
       <Layout middle>
         <Image
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, height: _screen_height * 0.3, resizeMode: 'contain' }}
           source={ImageAssets.logo} />
       </Layout>
       <FlatList
         data={props.listHistory}
         renderItem={({ item }) => (
           <ItemHistoryLayout item={item}/>
-        )} />
+        )} 
+        ListEmptyComponent={()=>(<Label h4 centered>Không có lịch tư vấn nào</Label>)}
+        />
     </Layout>
   );
 };

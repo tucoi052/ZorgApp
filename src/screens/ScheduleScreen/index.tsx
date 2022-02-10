@@ -9,7 +9,7 @@ import { ActionCreators as ContextAction } from 'store/context';
 import ItemHistoryLayout from 'screens/Shared/ItemHistory';
 import { ApplicationState } from 'store/configureAction';
 import { ActionCreators as AuthAction } from 'store/authenticate';
-import { _screen_height, _screen_width } from 'utils/sizes';
+import { sizes, _screen_height, _screen_width } from 'utils/sizes';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useFocusEffect, useIsFocused } from '@react-navigation/core';
 interface UIProps {
@@ -36,7 +36,7 @@ const ScheduleScreen = (props: UIProps) => {
   }
 
   useEffect(() => {
-    if (isFocused && props.isChangeStatus?.display){
+    if (isFocused || props.isChangeStatus?.display){
       console.log(props.isChangeStatus?.display);
       props.GetSchedule();
     }
@@ -49,23 +49,25 @@ const ScheduleScreen = (props: UIProps) => {
     <Layout flex color={color?.PRIMARY_COLOR} >
       <Layout middle>
         <Image
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, height: _screen_height * 0.3, resizeMode: 'contain' }}
           source={ImageAssets.logo} />
       </Layout>
       <FlatList
         data={props.listSchedule}
         renderItem={({ item }) => (
           <ItemHistoryLayout item={item} ChangeStatusSchedule={props.ChangeStatusSchedule}/>
-        )} />
+        )}
+        ListEmptyComponent={()=>(<Label h4 centered>Không có lịch tư vấn nào</Label>)}
+        />
       {userType == 3 && <Button middle style={{ position: 'absolute', top: _screen_width * 0.15, right: 30 }}
         onPress={() => {
           props.Logout()
         }}>
         <Image
           source={IconImage.logout}
-          style={{ width: 30, height: 30, tintColor: color?.BUTTON_COLOR }}
+          style={{ width: 20, height: 20, tintColor: color?.BUTTON_COLOR }}
         />
-        <Label color={color?.BUTTON_COLOR}>Đăng xuất</Label>
+        <Label size={sizes._12sdp} color={color?.BUTTON_COLOR}>Đăng xuất</Label>
       </Button>}
     </Layout>
   );

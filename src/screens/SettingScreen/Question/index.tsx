@@ -35,7 +35,7 @@ const QuestionLayout = (props: UIProps & typeof ContextAction) => {
             props.FieldChange('loadmoreQuestion', { ...props.loadmoreQuestion, offset: 0, isEnd: false });
             props.GetQuestion(10, 0);
         }
-        if ((search && search.length > 3)) {
+        if ((search && search.length > 1)) {
             props.FieldChange('loadmoreQuestion', { ...props.loadmoreQuestion, offset: 0, isEnd: false });
             props.FieldChange('listQuestion', []);
             props.GetQuestion(10, 0, search);

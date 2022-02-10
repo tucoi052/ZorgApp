@@ -119,9 +119,14 @@ export const ActionCreators = {
         const rsp = await client.post(Endpoint.REGISTER, register, true);
         if (rsp && rsp.status == 201) {
           console.log(rsp.data);
-
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'userType',
+            fieldValue: rsp.data.user.userType,
+          });
           await setToken(rsp.data.accessToken);
           await setRefreshToken(rsp.data.accessToken);
+          await AsyncStorage.setItem('userType', rsp.data.user.userType.toString());
           dispatch({
             type: ActionType.FIELD_CHANGE,
             fieldName: 'isLoggedIn',
@@ -130,6 +135,57 @@ export const ActionCreators = {
         }
       } catch (error) {
         showToast('error', error.response.data.message === 'EmailExisted' ? 'Email đã tồn tại!' : 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+      }
+    },
+  ForgotPassword: (forgotPassword: any): ThunkAction<KnownAction> =>
+    async (dispatch, getState) => {
+      try {
+        console.log(forgotPassword);
+
+        const rsp = await client.post(Endpoint.OTP, forgotPassword, {}, true);
+        if (rsp && rsp.status == 201) {
+          console.log(rsp.data);
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'forgotPassword',
+            fieldValue: { ...forgotPassword, otpDone: '1' },
+          });
+        }
+      } catch (error) {
+        showToast('error', error.response.data.message === 'EmailExisted' ? 'Email đã tồn tại!' : 'Có lỗi xảy ra!', 'Vui lòng thử lại!');
+      }
+    },
+  VerifyOtp: (forgotPassword: any): ThunkAction<KnownAction> =>
+    async (dispatch, getState) => {
+      try {
+        const rsp = await client.post(Endpoint.VERIFY_OTP, forgotPassword, {}, true);
+        if (rsp && rsp.status == 201) {
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'forgotPassword',
+            fieldValue: { ...forgotPassword, otpDone: '2' },
+          });
+        }
+      } catch (error) {
+        showToast('error', 'Mã xác thực không đúng!', 'Vui lòng thử lại!');
+      }
+    },
+  NewPassword: (forgotPassword: any): ThunkAction<KnownAction> =>
+    async (dispatch, getState) => {
+      try {
+        console.log(forgotPassword,'forgotPassword');
+        
+        const rsp = await client.post(Endpoint.NEW_PASSWORD, forgotPassword, {}, true);
+        if (rsp && rsp.status == 201) {
+          showToast('info', 'Thay đổi mật khẩu thành công!');
+          dispatch({
+            type: ActionType.FIELD_CHANGE,
+            fieldName: 'forgotPassword',
+            fieldValue: { ...forgotPassword, otpDone: '3', otp: undefined },
+          });
+        }
+      } catch (error) {
+        showToast('error', 'Mã xác thực không đúng!', 'Vui lòng thử lại!');
       }
     },
 };
