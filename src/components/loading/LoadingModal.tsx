@@ -89,7 +89,6 @@ class LoadingModal extends PureComponent<IProps, IStates> {
             type={this.props.spinnerType}
             color={this.props.spinnerColor}
           />
-          <Label>this.state.textLoading ?? ''</Label>
         </View>
       )
     );

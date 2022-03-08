@@ -4,22 +4,12 @@ import {
     Image,
     View,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { ActionCreators as ContextAction } from 'store/context';
-import { ActionCreators as AuthAction } from 'store/authenticate';
-import { ApplicationState } from 'store/configureAction';
 import { TextInputUI, Layout, Label, Button } from 'components';
-import { useFormik } from 'formik';
-import { FormStage, Row, Stage } from 'models/form';
-import { LoginUser } from 'models/auth';
 import { ImageAssets } from 'assets';
 import { sizes, _screen_height } from 'utils/sizes';
 import { useColor } from 'hooks';
 import { useNavigation } from '@react-navigation/core'; 1
-import { RouteName } from 'constant';
 import Animated, { measure, runOnUI, Transition, Transitioning, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { Doctor } from 'models/doctor';
 
 interface State {
     item: any,

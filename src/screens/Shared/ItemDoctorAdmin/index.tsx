@@ -34,9 +34,9 @@ const ItemDoctorAdminLayout = (props: UIProps) => {
     const navigation = useNavigation();
     const aref = useAnimatedRef<View>();
     const open = useSharedValue(false);
-    const progress = useDerivedValue(() =>
-        open.value ? withSpring(1) : withTiming(0)
-    );
+    const progress = useDerivedValue(() => {
+        return open.value ? withSpring(1) : withTiming(0)
+    }, [open]);
     const height = useSharedValue(0);
 
     const style = useAnimatedStyle(() => ({
@@ -69,12 +69,17 @@ const ItemDoctorAdminLayout = (props: UIProps) => {
                 overflow: "hidden",
             }, style]}>
                 <View
+                    onLayout={({
+                        nativeEvent: {
+                            layout: { height: h },
+                        },
+                    }) => height.value = h}
                     ref={aref}
                 >
                     <Label bold marginBottom={10}>Thông tin bác sĩ:</Label>
                     <Label marginBottom={10}>{props.item.description}</Label>
                     <Label style={{ alignSelf: 'flex-end' }} marginBottom={10}>Lượt lựa chọn: {props.item.quantityChoose}</Label>
-                    <Layout direction='row' justifyContent='space-around' 
+                    <Layout direction='row' justifyContent='space-around'
                     // paddingLeft={_screen_width * 0.3}
                     >
                         <Button marginTop={10} borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle paddingHorizontal={20}

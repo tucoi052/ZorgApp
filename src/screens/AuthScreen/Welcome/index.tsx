@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     TouchableWithoutFeedback,
     Keyboard,
@@ -7,6 +7,7 @@ import {
     Platform,
     ScrollView,
     Image,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -33,6 +34,11 @@ type UIProps = State;
 const WelcomeLayout = (props: UIProps) => {
     const color = useColor();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        StatusBar.setBackgroundColor(color?.PRIMARY_COLOR);
+    },[])
+
     return (
         <Layout flex middle color={color?.PRIMARY_COLOR}>
             <Image

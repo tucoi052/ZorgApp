@@ -32,9 +32,9 @@ const ItemDoctorLayout = (props: UIProps) => {
     const navigation = useNavigation();
     const aref = useAnimatedRef<View>();
     const open = useSharedValue(false);
-    const progress = useDerivedValue(() =>
-        open.value ? withSpring(1) : withTiming(0)
-    );
+    const progress = useDerivedValue(() => {
+        return open.value ? withSpring(1) : withTiming(0)
+    }, [open]);
     const height = useSharedValue(0);
 
     const style = useAnimatedStyle(() => ({
@@ -48,7 +48,7 @@ const ItemDoctorLayout = (props: UIProps) => {
                 if (height.value === 0) {
                     runOnUI(() => {
                         "worklet";
-                        height.value = measure(aref).height * 3 + 20;
+                        height.value = measure(aref).height;
                     })();
                 }
                 open.value = !open.value;
@@ -67,15 +67,21 @@ const ItemDoctorLayout = (props: UIProps) => {
                 overflow: "hidden",
             }, style]}>
                 <View
+                    onLayout={({
+                        nativeEvent: {
+                            layout: { height: h },
+                        },
+                    }) => height.value = h}
                     ref={aref}
                 >
                     <Label bold marginBottom={10}>Thông tin bác sĩ:</Label>
                     <Label marginBottom={10}>{props.item.description}</Label>
-                    <Label  style={{alignSelf: 'flex-end'}} marginBottom={10}>Lượt lựa chọn: {props.item.quantityChoose}</Label>
+                    <Label style={{ alignSelf: 'flex-end' }} marginBottom={10}>Lượt lựa chọn: {props.item.quantityChoose}</Label>
                     <Button marginTop={10} borderRadius={10} padding={10} color={color?.BUTTON_COLOR} middle marginHorizontal={_screen_height * 0.12}
-                    onPress={()=> navigation.navigate(RouteName.BOOK_DOCTOR, {item: props.item, id: props.id})}>
+                        onPress={() => navigation.navigate(RouteName.BOOK_DOCTOR, { item: props.item, id: props.id })}>
                         <Label color='#fff'>Chọn</Label>
                     </Button>
+                    <Layout height={20}/>
                 </View>
             </Animated.View>
         </Button>
