@@ -4,7 +4,7 @@ import { HomeStackContainer } from './stackHomeNavigation';
 import { SettingStackContainer } from './stackSettingNavigation';
 import { DoctorStackContainer } from './stackDoctorAdmin';
 import { RouteName } from 'constant';
-import { Image } from 'react-native';
+import { Image, StatusBar } from 'react-native';
 import { TabIcon } from 'assets';
 import { sizes } from 'utils/sizes';
 import { MyTabBar } from './MyTabBar';
@@ -14,13 +14,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UserAdmin from 'screens/UserAdmin';
 import FeedbackAdmin from 'screens/FeedbackAdmin';
 import DoctorAdmin from 'screens/DoctorAdmin';
+import { useColor } from 'hooks';
 const Tab = createBottomTabNavigator();
 
 type Props = {};
 export const TabContainer = (props: Props) => {
   const [userType, setUserType] = useState(2);
+  const color = useColor();
+
   useEffect(() => {
     getType();
+    StatusBar.setBackgroundColor(color?.PRIMARY_COLOR);
   }, [])
 
   const getType = async () => {
