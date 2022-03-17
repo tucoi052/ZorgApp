@@ -54,7 +54,7 @@ const SignInLayout = (props: UIProps) => {
       if (isAdmin)
         props.LoginAdmin(values.email, values.password);
       else
-        props.Login(values.email, values.password);
+        props.Login(values.email.trim(), values.password.trim());
     },
   });
   const errorMessage = (fieldName: string) => {
